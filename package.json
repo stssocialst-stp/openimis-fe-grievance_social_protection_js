@@ -5,7 +5,7 @@
   "description": "Fork of a openIMIS Frontend Grievance module",
   "repository": {
     "type": "git",
-    "url": "github.com/stssocialst-stp/openimis-fe-grievance_social_protection_js"
+    "url": "https://github.com/stssocialst-stp/openimis-fe-grievance_social_protection_js"
   },
   "main": "dist/index.js",
   "module": "dist/index.es.js",
