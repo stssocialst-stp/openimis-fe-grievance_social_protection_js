@@ -12,7 +12,7 @@ import {
 import { Save } from '@material-ui/icons';
 import {
   TextInput, journalize, PublishedComponent, FormattedMessage,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import { createTicket } from '../actions';
 import { EMPTY_STRING, GRIEVANT_TYPES, MODULE_NAME } from '../constants';
 import GrievantTypePicker from '../pickers/GrievantTypePicker';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import { withTheme, withStyles } from '@material-ui/core/styles';
-import { TextInput, PublishedComponent } from '@openimis/fe-core';
+import { TextInput, PublishedComponent } from '@stssocialst-stp/fe-core';
 import { EMPTY_STRING, MODULE_NAME } from '../constants';
 import GrievantSexPicker from '../pickers/GrievantSexPicker';
 

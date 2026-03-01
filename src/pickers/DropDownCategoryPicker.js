@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTranslations, Autocomplete, useGraphqlQuery } from '@openimis/fe-core';
+import { useTranslations, Autocomplete, useGraphqlQuery } from '@stssocialst-stp/fe-core';
 
 function DropDownCategoryPicker(props) {
   const {

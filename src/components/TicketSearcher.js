@@ -19,7 +19,7 @@ import {
   formatMessage,
   historyPush,
   decodeId,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import EditIcon from '@material-ui/icons/Edit';
 // import AddIcon from '@material-ui/icons/Add';
 import { MODULE_NAME, RIGHT_TICKET_EDIT } from '../constants';

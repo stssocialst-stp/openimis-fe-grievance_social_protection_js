@@ -13,7 +13,7 @@ import {
   PublishedComponent,
   decodeId,
   formatMessage,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import { MODULE_NAME } from '../constants';
 
 const styles = (theme) => ({

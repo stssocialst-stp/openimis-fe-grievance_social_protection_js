@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { withTheme, withStyles } from '@material-ui/core/styles';
 import {
   formatMessageWithValues, withModulesManager, withHistory, historyPush,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import TicketForm from '../components/TicketForm';
 import { updateTicket, createTicket } from '../actions';
 import { RIGHT_TICKET_ADD, RIGHT_TICKET_EDIT, TICKET_STATUSES } from '../constants';

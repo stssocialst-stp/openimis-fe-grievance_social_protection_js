@@ -8,7 +8,7 @@ import {
   formatDateFromISO,
   Contributions,
   ControlledField,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 
 const INSUREE_SUMMARY_AVATAR_CONTRIBUTION_KEY = 'insuree.InsureeSummaryAvatar';
 const INSUREE_SUMMARY_CORE_CONTRIBUTION_KEY = 'insuree.InsureeSummaryCore';

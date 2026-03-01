@@ -4,7 +4,7 @@ import {
   coreAlert,
   useModulesManager,
   useTranslations,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import { fetchGrievanceConfiguration } from '../actions';
 import {
   MODULE_NAME,

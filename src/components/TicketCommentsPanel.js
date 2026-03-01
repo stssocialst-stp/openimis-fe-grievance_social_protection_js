@@ -18,7 +18,7 @@ import {
   Table,
   withHistory,
   withModulesManager,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import {
   IconButton, Paper, Tooltip,
 } from '@material-ui/core';

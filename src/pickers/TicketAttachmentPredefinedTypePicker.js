@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useModulesManager, useTranslations, Autocomplete, useGraphqlQuery } from "@openimis/fe-core";
+import { useModulesManager, useTranslations, Autocomplete, useGraphqlQuery } from "@stssocialst-stp/fe-core";
 import { MODULE_NAME } from "../constants";
 
 const TicketAttachmentPredefinedTypePicker = ({

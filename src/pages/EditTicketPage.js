@@ -23,7 +23,7 @@ import {
   TextInput,
   PublishedComponent,
   FormattedMessage,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import _ from 'lodash';
 import { Save } from '@material-ui/icons';
 import { updateTicket, fetchTicket, createTicketComment } from '../actions';

@@ -3,7 +3,7 @@
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
 import { ListAlt, AddCircleOutline } from '@material-ui/icons';
-import { FormattedMessage } from '@openimis/fe-core';
+import { FormattedMessage } from '@stssocialst-stp/fe-core';
 import messages_en from './translations/en.json';
 import reducer from './reducer';
 import GrievanceMainMenu from './menu/GrievanceMainMenu';

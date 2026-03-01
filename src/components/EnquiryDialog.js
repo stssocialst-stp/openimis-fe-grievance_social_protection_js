@@ -14,7 +14,7 @@ import {
   ProgressOrError,
   withModulesManager,
   withHistory,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import { fetchIndividual } from '../actions';
 import IndividualSummary from './IndividualSummary';
 

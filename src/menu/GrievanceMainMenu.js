@@ -5,7 +5,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { ListAlt, AddCircleOutline } from '@material-ui/icons';
-import { formatMessage, MainMenuContribution, withModulesManager } from '@openimis/fe-core';
+import { formatMessage, MainMenuContribution, withModulesManager } from '@stssocialst-stp/fe-core';
 import {
   GRIEVANCE_MAIN_MENU_CONTRIBUTION_KEY,
   MODULE_NAME,

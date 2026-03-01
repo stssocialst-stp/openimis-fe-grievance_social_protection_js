@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { Component } from 'react';
-import { ConstantBasedPicker } from '@openimis/fe-core';
+import { ConstantBasedPicker } from '@stssocialst-stp/fe-core';
 
 import { TICKET_PRIORITY } from '../constants';
 

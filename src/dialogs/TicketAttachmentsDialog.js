@@ -32,7 +32,7 @@ import {
   journalize,
   coreConfirm,
   coreAlert,
-} from "@openimis/fe-core";
+} from "@stssocialst-stp/fe-core";
 import {
   fetchTicketAttachments,
   downloadAttachment,

@@ -3,7 +3,7 @@
 import {
   graphql, formatMutation, formatPageQueryWithCount, formatGQLString, formatPageQuery,
   baseApiUrl, decodeId, openBlob, formatQuery,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import { ACTION_TYPE } from './reducer';
 import { FETCH_INDIVIDUAL_REF } from './constants';
 import { isBase64Encoded } from './utils/utils';

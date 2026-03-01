@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import {
   useTranslations, useModulesManager,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import { MODULE_NAME } from '../constants';
 
 const useStyles = makeStyles(() => ({

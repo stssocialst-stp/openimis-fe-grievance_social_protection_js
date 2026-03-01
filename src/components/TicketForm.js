@@ -11,7 +11,7 @@ import AttachIcon from "@material-ui/icons/AttachFile";
 import {
   Form, formatMessageWithValues, journalize, ProgressOrError, withModulesManager, formatMessage,
   PublishedComponent, Contributions,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import { bindActionCreators } from 'redux';
 import {
   clearTicket,

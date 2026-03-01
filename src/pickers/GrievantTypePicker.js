@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConstantBasedPicker } from '@openimis/fe-core';
+import { ConstantBasedPicker } from '@stssocialst-stp/fe-core';
 import { GRIEVANT_TYPE_LIST } from '../constants';
 
 function GrievantTypePicker(props) {

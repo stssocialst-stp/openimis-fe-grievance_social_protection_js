@@ -7,7 +7,7 @@ import { Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import {
   historyPush, withModulesManager, withHistory, withTooltip, formatMessage, decodeId,
-} from '@openimis/fe-core';
+} from '@stssocialst-stp/fe-core';
 import TicketSearcher from '../components/TicketSearcher';
 
 import { MODULE_NAME, RIGHT_TICKET_ADD } from '../constants';
