@@ -14,12 +14,17 @@ const styles = (theme) => ({
   },
 });
 
-const ReporterFields = ({ classes, stateEdited, updateAttribute, isSaved }) => {
-  const reporter = stateEdited?.reporter
-    ? (() => { try { return JSON.parse(JSON.parse(stateEdited.reporter)); } catch { return {}; } })()
-    : {};
+const ReporterFields = ({
+  classes, stateEdited, updateAttribute, isSaved, individualSelected,
+}) => {
+  const reporter = stateEdited?.reporter && typeof stateEdited.reporter === 'object'
+    ? stateEdited.reporter
+    : stateEdited?.reporter
+      ? (() => { try { return JSON.parse(JSON.parse(stateEdited.reporter)); } catch { return {}; } })()
+      : {};
 
   const reporterInfo = stateEdited?.reporterInfo || {};
+  const isReadOnly = isSaved || !!individualSelected;
 
   // Helper to update a single key in reporterInfo JSON
   const updateReporterInfo = (key, value) => {
@@ -41,7 +46,7 @@ const ReporterFields = ({ classes, stateEdited, updateAttribute, isSaved }) => {
           }
           onChange={(v) => updateReporterInfo('name', v)}
           required={false}
-          readOnly={isSaved}
+          readOnly={isReadOnly}
         />
       </Grid>
       <Grid item xs={4}>
@@ -56,7 +61,7 @@ const ReporterFields = ({ classes, stateEdited, updateAttribute, isSaved }) => {
           }
           onChange={(v) => updateReporterInfo('dob', v)}
           required={false}
-          readOnly={isSaved}
+          readOnly={isReadOnly}
         />
       </Grid>
       <Grid item xs={4}>
@@ -64,7 +69,7 @@ const ReporterFields = ({ classes, stateEdited, updateAttribute, isSaved }) => {
           value={reporterInfo.gender || EMPTY_STRING}
           onChange={(v) => updateReporterInfo('gender', v)}
           required={false}
-          readOnly={isSaved}
+          readOnly={isReadOnly}
           withNull
           withLabel
         />
@@ -76,7 +81,7 @@ const ReporterFields = ({ classes, stateEdited, updateAttribute, isSaved }) => {
           value={reporterInfo.phone || EMPTY_STRING}
           onChange={(v) => updateReporterInfo('phone', v)}
           required={false}
-          readOnly={isSaved}
+          readOnly={isReadOnly}
         />
       </Grid>
       <Grid item xs={4}>
@@ -86,7 +91,7 @@ const ReporterFields = ({ classes, stateEdited, updateAttribute, isSaved }) => {
           value={reporterInfo.otherInfo || EMPTY_STRING}
           onChange={(v) => updateReporterInfo('otherInfo', v)}
           required={false}
-          readOnly={isSaved}
+          readOnly={isReadOnly}
         />
       </Grid>
       <Grid item xs={4}>
@@ -96,7 +101,7 @@ const ReporterFields = ({ classes, stateEdited, updateAttribute, isSaved }) => {
           value={reporterInfo.idNumber || EMPTY_STRING}
           onChange={(v) => updateReporterInfo('idNumber', v)}
           required={false}
-          readOnly={isSaved}
+          readOnly={isReadOnly}
         />
       </Grid>
       <Grid item xs={4}>
@@ -106,7 +111,7 @@ const ReporterFields = ({ classes, stateEdited, updateAttribute, isSaved }) => {
           value={reporterInfo.district || EMPTY_STRING}
           onChange={(v) => updateReporterInfo('district', v)}
           required={false}
-          readOnly={isSaved}
+          readOnly={isReadOnly}
         />
       </Grid>
       <Grid item xs={4}>
@@ -116,7 +121,7 @@ const ReporterFields = ({ classes, stateEdited, updateAttribute, isSaved }) => {
           value={reporterInfo.subDistrict || EMPTY_STRING}
           onChange={(v) => updateReporterInfo('subDistrict', v)}
           required={false}
-          readOnly={isSaved}
+          readOnly={isReadOnly}
         />
       </Grid>
       <Grid item xs={4}>
@@ -126,7 +131,7 @@ const ReporterFields = ({ classes, stateEdited, updateAttribute, isSaved }) => {
           value={reporterInfo.locality || EMPTY_STRING}
           onChange={(v) => updateReporterInfo('locality', v)}
           required={false}
-          readOnly={isSaved}
+          readOnly={isReadOnly}
         />
       </Grid>
     </Grid>

@@ -86,6 +86,25 @@ class AddTicketPage extends Component {
     }));
   };
 
+  updateIndividualReporter = (individual) => {
+    this.updateAttribute('reporter', individual);
+    if (individual) {
+      this.updateAttribute('reporterInfo', {
+        name: [individual.firstName, individual.lastName].filter(Boolean).join(' '),
+        dob: individual.dob || '',
+        gender: individual.sexo || '',
+        phone: individual.contactoTelefonico || '',
+        otherInfo: individual.vulgo || '',
+        idNumber: individual.numDocId || '',
+        district: individual.distrito || '',
+        subDistrict: individual.subdistrito || '',
+        locality: individual.localidade || '',
+      });
+    } else {
+      this.updateAttribute('reporterInfo', {});
+    }
+  };
+
   render() {
     const {
       classes,
@@ -142,7 +161,7 @@ class AddTicketPage extends Component {
                         pubRef="individual.IndividualPicker"
                         value={stateEdited.reporter}
                         label="Complainant"
-                        onChange={(v) => this.updateAttribute('reporter', v)}
+                        onChange={(v) => this.updateIndividualReporter(v)}
                         benefitPlan={benefitPlan}
                         readOnly={isSaved}
                       />
@@ -196,6 +215,7 @@ class AddTicketPage extends Component {
                     updateAttribute={this.updateAttribute}
                     isSaved={isSaved}
                     classes={classes}
+                    individualSelected={grievantType === GRIEVANT_TYPES.INDIVIDUAL && !!stateEdited.reporter}
                   />
                 ) : null}
                 {grievantType === GRIEVANT_TYPES.BENEFICIARY && (
