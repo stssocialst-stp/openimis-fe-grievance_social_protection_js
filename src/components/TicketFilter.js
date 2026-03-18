@@ -88,7 +88,7 @@ class TicketFilter extends Component {
                 ])}
               />
             </Grid>
-                      )}
+          )}
         />
         <ControlledField
           module={MODULE_NAME}
@@ -109,7 +109,7 @@ class TicketFilter extends Component {
                 ])}
               />
             </Grid>
-                      )}
+          )}
         />
         <ControlledField
           module={MODULE_NAME}
@@ -143,12 +143,12 @@ class TicketFilter extends Component {
                   {
                     id: 'priority',
                     value: v,
-                    filter: `priority_Icontains: "${v}"`,
+                    filter: v?.id ? `priorityId: "${v.id}"` : '',
                   },
                 ])}
               />
             </Grid>
-                      )}
+          )}
         />
         <ControlledField
           module={MODULE_NAME}
@@ -169,7 +169,7 @@ class TicketFilter extends Component {
                 ])}
               />
             </Grid>
-                      )}
+          )}
         />
         <ControlledField
           module={MODULE_NAME}
@@ -184,12 +184,12 @@ class TicketFilter extends Component {
                   {
                     id: 'category',
                     value: v,
-                    filter: `category_Icontains: "${v}"`,
+                    filter: v?.id ? `categoryId: "${v.id}"` : '',
                   },
                 ])}
               />
             </Grid>
-                      )}
+          )}
         />
         <Grid>
           <ControlledField
@@ -204,11 +204,11 @@ class TicketFilter extends Component {
                       checked={!!this._filterValue('showHistory')}
                       onChange={(event) => this._onChangeCheckbox('showHistory', event.target.checked)}
                     />
-                                )}
+                  )}
                   label={formatMessage(this.props.intl, MODULE_NAME, 'showHistory')}
                 />
               </Grid>
-                    )}
+            )}
           />
         </Grid>
         <Contributions

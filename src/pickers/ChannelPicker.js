@@ -1,53 +1,64 @@
-import React, { useState } from 'react';
-import { useTranslations, Autocomplete, useGraphqlQuery } from '@stssocialst-stp/fe-core';
+import React, { Component } from 'react';
+import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Autocomplete, formatMessage } from '@stssocialst-stp/fe-core';
+import { fetchTicketChannels } from '../actions';
 
-function ChannelPicker(props) {
-  const {
-    onChange,
-    readOnly,
-    required,
-    withLabel = true,
-    withPlaceholder,
-    value,
-    label,
-    filterOptions,
-    filterSelectedOptions,
-    placeholder,
-    multiple,
-  } = props;
-  const [searchString, setSearchString] = useState(null);
-  const { formatMessage } = useTranslations('ticket');
+class ChannelPicker extends Component {
+  componentDidMount() {
+    if (!this.props.channels.length && !this.props.fetching) {
+      this.props.fetchTicketChannels();
+    }
+  }
 
-  const { isLoading, data, error } = useGraphqlQuery(
-    `query ChannelPicker {
-        grievanceConfig{
-          grievanceChannels
-        }
-    }`,
-    { searchString, first: 20 },
-    { skip: true },
-  );
+  render() {
+    const {
+      intl,
+      onChange,
+      readOnly,
+      required,
+      withLabel = true,
+      withPlaceholder,
+      value,
+      label,
+      filterOptions,
+      filterSelectedOptions,
+      placeholder,
+      multiple,
+      channels,
+      fetching,
+      error,
+    } = this.props;
 
-  return (
-    <Autocomplete
-      multiple={multiple}
-      required={required}
-      placeholder={placeholder ?? formatMessage('ChannelPicker.placeholder')}
-      label={label ?? formatMessage('ChannelPicker.label')}
-      error={error}
-      withLabel={withLabel}
-      withPlaceholder={withPlaceholder}
-      readOnly={readOnly}
-      options={data?.grievanceConfig?.grievanceChannels.map((channel) => channel) ?? []}
-      isLoading={isLoading}
-      value={value}
-      getOptionLabel={(option) => `${option}`}
-      onChange={(option) => onChange(option, option ? `${option}` : null)}
-      filterOptions={filterOptions}
-      filterSelectedOptions={filterSelectedOptions}
-      onInputChange={setSearchString}
-    />
-  );
+    return (
+      <Autocomplete
+        multiple={multiple}
+        required={required}
+        placeholder={placeholder ?? formatMessage(intl, 'ticket', 'ChannelPicker.placeholder')}
+        label={label ?? formatMessage(intl, 'ticket', 'ChannelPicker.label')}
+        error={error}
+        withLabel={withLabel}
+        withPlaceholder={withPlaceholder}
+        readOnly={readOnly}
+        options={channels}
+        isLoading={fetching}
+        value={value}
+        getOptionLabel={(option) => option?.nome ?? `${option}`}
+        onChange={(option) => onChange(option, option?.nome ?? null)}
+        filterOptions={filterOptions}
+        filterSelectedOptions={filterSelectedOptions}
+        onInputChange={this.props.onInputChange || (() => { })}
+      />
+    );
+  }
 }
 
-export default ChannelPicker;
+const mapStateToProps = (state) => ({
+  channels: state.grievanceSocialProtection.ticketChannels ?? [],
+  fetching: state.grievanceSocialProtection.fetchingTicketChannels,
+  error: state.grievanceSocialProtection.errorTicketChannels,
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchTicketChannels }, dispatch);
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(ChannelPicker));

@@ -12,9 +12,9 @@ import {
 } from './utils/action-type';
 
 const GRIEVANCE_CONFIGURATION_PROJECTION = () => [
-  'grievanceTypes',
-  'grievanceFlags',
-  'grievanceChannels',
+  'grievanceTypes{id, uuid, codigo, nome}',
+  'grievanceFlags{id, uuid, codigo, nome}',
+  'grievanceChannels{id, uuid, codigo, nome}',
   'grievanceDefaultResolutionsByCategory{category, resolutionTime}',
 ];
 
@@ -35,9 +35,9 @@ export function fetchCategoryForPicker(mm, filters) {
 export function fetchTicketSummaries(mm, filters) {
   const projections = [
     'id', 'title', 'code', 'description', 'status',
-    'priority', 'dueDate', 'reporter', 'reporterId',
-    'reporterType', 'reporterTypeName', 'category', 'flags',
-    'channel', 'resolution', 'title', 'dateOfIncident', 'dateCreated', 'version', 'isHistory',
+    'priority {id uuid codigo nome ordem}', 'dueDate', 'reporter', 'reporterId',
+    'reporterType', 'reporterTypeName', 'category {id uuid codigo nome}', 'flags {id uuid codigo nome}',
+    'channel {id uuid codigo nome}', 'resolution', 'title', 'dateOfIncident', 'dateCreated', 'version', 'isHistory',
     'reporterFirstName', 'reporterLastName', 'reporterDob',
   ];
   const payload = formatPageQueryWithCount(
@@ -51,10 +51,10 @@ export function fetchTicketSummaries(mm, filters) {
 export function fetchTicket(mm, filters) {
   const projections = [
     'id', 'title', 'code', 'description', 'status',
-    'priority', 'dueDate', 'reporter', 'reporterId',
-    'reporterType', 'reporterTypeName', 'reporterInfo', 'category', 'flags', 'channel',
+    'priority {id uuid codigo nome ordem}', 'dueDate', 'reporter', 'reporterId',
+    'reporterType', 'reporterTypeName', 'reporterInfo', 'category {id uuid codigo nome}', 'flags {id uuid codigo nome}', 'channel {id uuid codigo nome}',
     'resolution', 'title', 'dateOfIncident', 'dateCreated',
-    'attendingStaff {id, username}', 'version', 'isHistory,', 'jsonExt',
+    'attendingStaff {id username}', 'version', 'isHistory,', 'jsonExt',
     'reporterFirstName', 'reporterLastName', 'reporterDob',
   ];
   const payload = formatPageQueryWithCount(
@@ -103,18 +103,18 @@ export function formatTicketGQL(ticket) {
   return `
     ${ticket.id !== undefined && ticket.id !== null ? `id: "${ticket.id}"` : ''}
     ${ticket.code ? `code: "${formatGQLString(ticket.code)}"` : ''}
-    ${ticket.category ? `category: "${ticket.category}"` : ''}
+    ${ticket.category ? `categoryId: "${ticket.category?.id ?? ticket.category?.uuid ?? ticket.category}"` : ''}
     ${ticket.title ? `title: "${ticket.title}"` : ''}
     ${ticket.description ? `description: "${ticket.description}"` : ''}
     ${ticket.reporterType ? `reporterType: "${ticket.reporterType}"` : ''}
     ${ticket.reporter ? `reporterId: "${reporterId}"` : ''}
     ${ticket.reporterInfo ? `reporterInfo: ${reporter_info}` : ''}
     ${ticket.status ? `status: "${ticket.status}"` : ''}
-    ${ticket.priority ? `priority: "${ticket.priority}"` : ''}
+    ${ticket.priority ? `priorityId: "${ticket.priority?.id ?? ticket.priority?.uuid ?? ticket.priority}"` : ''}
     ${ticket.dueDate ? `dueDate: "${ticket.dueDate}"` : ''}
     ${ticket.dateOfIncident ? `dateOfIncident: "${ticket.dateOfIncident}"` : ''}
-    ${ticket.channel ? `channel: "${ticket.channel}"` : ''}
-    ${ticket.flags ? `flags: "${ticket.flags}"` : ''}
+    ${ticket.channel ? `channelId: "${ticket.channel?.id ?? ticket.channel?.uuid ?? ticket.channel}"` : ''}
+    ${ticket.flags ? `flagsId: "${ticket.flags?.id ?? ticket.flags?.uuid ?? ticket.flags}"` : ''}
   `;
 }
 
@@ -125,26 +125,26 @@ export function formatUpdateTicketGQL(ticket) {
   if (ticket.reporter) ticket.reporter = JSON.parse(JSON.parse(ticket.reporter || '{}'), '{}');
   return `
     ${ticket.id !== undefined && ticket.id !== null ? `id: "${ticket.id}"` : ''}
-    ${!!ticket.category && !!ticket.category ? `category: "${ticket.category}"` : ''}
-    ${!!ticket.title && !!ticket.title ? `title: "${ticket.title}"` : ''}
-    ${!!ticket.description && !!ticket.description ? `description: "${ticket.description}"` : ''}
-    ${!!ticket.attendingStaff && !!ticket.attendingStaff ? `attendingStaffId: "${decodeId(ticket.attendingStaff.id)}"` : ''}
+    ${!!ticket.category ? `categoryId: "${ticket.category?.id ?? ticket.category?.uuid ?? ticket.category}"` : ''}
+    ${!!ticket.title ? `title: "${ticket.title}"` : ''}
+    ${!!ticket.description ? `description: "${ticket.description}"` : ''}
+    ${!!ticket.attendingStaff ? `attendingStaffId: "${decodeId(ticket.attendingStaff.id)}"` : ''}
     ${ticket.reporter
-    ? (isBase64Encoded(ticket.reporter.id)
-      ? `reporterId: "${decodeId(ticket.reporter.id)}"`
-      : `reporterId: "${ticket.reporter.id}"`)
-    : ''}
-    ${!!ticket.reporter && !!ticket.reporter ? `reporterType: "${ticket.reporterTypeName}"` : ''}
+      ? (isBase64Encoded(ticket.reporter.id)
+        ? `reporterId: "${decodeId(ticket.reporter.id)}"`
+        : `reporterId: "${ticket.reporter.id}"`)
+      : ''}
+    ${!!ticket.reporter ? `reporterType: "${ticket.reporterTypeName}"` : ''}
     ${ticket.nameOfComplainant ? `nameOfComplainant: "${formatGQLString(ticket.nameOfComplainant)}"` : ''}
     ${ticket.reporterInfo ? `reporterInfo: ${reporter_info}` : ''}
     ${ticket.resolution ? `resolution: "${formatGQLString(ticket.resolution)}"` : ''}
     ${ticket.status ? `status: ${formatGQLString(ticket.status)}` : ''}
-    ${ticket.priority ? `priority: "${formatGQLString(ticket.priority)}"` : ''}
+    ${ticket.priority ? `priorityId: "${ticket.priority?.id ?? ticket.priority?.uuid ?? formatGQLString(ticket.priority)}"` : ''}
     ${ticket.dueDate ? `dueDate: "${formatGQLString(ticket.dueDate)}"` : ''}
     ${ticket.dateSubmitted ? `dateSubmitted: "${formatGQLString(ticket.dateSubmitted)}"` : ''}
     ${ticket.dateOfIncident ? `dateOfIncident: "${formatGQLString(ticket.dateOfIncident)}"` : ''}
-    ${!!ticket.channel && !!ticket.channel ? `channel: "${ticket.channel}"` : ''}
-    ${!!ticket.flags && !!ticket.flags ? `flags: "${ticket.flags}"` : ''}
+    ${!!ticket.channel ? `channelId: "${ticket.channel?.id ?? ticket.channel?.uuid ?? ticket.channel}"` : ''}
+    ${!!ticket.flags ? `flagsId: "${ticket.flags?.id ?? ticket.flags?.uuid ?? ticket.flags}"` : ''}
   `;
 }
 
@@ -163,7 +163,8 @@ export function createTicket(ticket, grievanceConfig, clientMutationLabel) {
     resolutionTimeMap[item.category] = item.resolutionTime;
   });
   // eslint-disable-next-line no-param-reassign
-  ticket.resolution = resolutionTimeMap[ticket.category];
+  const categoryKey = ticket.category?.codigo ?? ticket.category;
+  ticket.resolution = resolutionTimeMap[categoryKey];
   const mutation = formatMutation('createTicket', formatTicketGQL(ticket), clientMutationLabel);
   const requestedDateTime = new Date();
   return graphql(mutation.payload, ['TICKET_MUTATION_REQ', 'TICKET_CREATE_TICKET_RESP', 'TICKET_MUTATION_ERR'], {
@@ -370,6 +371,29 @@ export function fetchIndividual(mm, id) {
   return fetchIndividualCallable([`id: ${id}`]);
 }
 
+export function fetchIndividualById(id) {
+  const payload = `{
+    individual(id: "${id}") {
+      edges {
+        node {
+          id
+          firstName
+          lastName
+          dob
+          sexo
+          contactoTelefonico
+          vulgo
+          numDocId
+          distrito
+          subdistrito
+          localidade
+        }
+      }
+    }
+  }`;
+  return graphql(payload, 'TICKET_INDIVIDUAL_AUTOFILL');
+}
+
 export function fetchInsureeTicket(mm, chfId) {
   const filters = [
     `chfId: "${chfId}"`,
@@ -391,8 +415,46 @@ export function fetchInsureeTicket(mm, chfId) {
 }
 
 export function fetchGrievanceConfiguration(params) {
-  const payload = formatQuery('grievanceConfig', params, GRIEVANCE_CONFIGURATION_PROJECTION());
+  const payload = `
+    {
+      grievanceConfig {
+        grievanceTypes { uuid, codigo, nome }
+        grievanceFlags { uuid, codigo, nome }
+        grievanceChannels { uuid, codigo, nome }
+        grievanceDefaultResolutionsByCategory { category, resolutionTime }
+      }
+    }
+  `;
   return graphql(payload, ACTION_TYPE.GET_GRIEVANCE_CONFIGURATION);
+}
+
+export function fetchTicketAttachmentTypes() {
+  const payload = `{
+    ticketAttachmentType(first: 200) {
+      edges { node { id isAutogenerated ticketGeneralType ticketAttachmentType } }
+    }
+  }`;
+  return graphql(payload, 'TICKET_PICKER_ATTACHMENT_TYPES');
+}
+
+export function fetchTicketCategories() {
+  const payload = '{ ticketCategories(ativo: true) { edges { node { id uuid codigo nome } } } }';
+  return graphql(payload, 'TICKET_PICKER_CATEGORIES');
+}
+
+export function fetchTicketChannels() {
+  const payload = '{ ticketChannels(ativo: true) { edges { node { id uuid codigo nome } } } }';
+  return graphql(payload, 'TICKET_PICKER_CHANNELS');
+}
+
+export function fetchTicketFlags() {
+  const payload = '{ ticketFlags(ativo: true) { edges { node { id uuid codigo nome } } } }';
+  return graphql(payload, 'TICKET_PICKER_FLAGS');
+}
+
+export function fetchTicketPriorities() {
+  const payload = '{ ticketPriorities(ativo: true, orderBy: ["ordem"]) { edges { node { id uuid codigo nome ordem } } } }';
+  return graphql(payload, 'TICKET_PICKER_PRIORITIES');
 }
 
 export const clearTicket = () => (dispatch) => {

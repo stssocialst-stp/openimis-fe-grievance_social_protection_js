@@ -1,53 +1,64 @@
-import React, { useState } from 'react';
-import { useTranslations, Autocomplete, useGraphqlQuery } from '@stssocialst-stp/fe-core';
+import React, { Component } from 'react';
+import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Autocomplete, formatMessage } from '@stssocialst-stp/fe-core';
+import { fetchTicketFlags } from '../actions';
 
-function FlagPicker(props) {
-  const {
-    onChange,
-    readOnly,
-    required,
-    withLabel = true,
-    withPlaceholder,
-    value,
-    label,
-    filterOptions,
-    filterSelectedOptions,
-    placeholder,
-    multiple,
-  } = props;
-  const [searchString, setSearchString] = useState(null);
-  const { formatMessage } = useTranslations('ticket');
+class FlagPicker extends Component {
+  componentDidMount() {
+    if (!this.props.flags.length && !this.props.fetching) {
+      this.props.fetchTicketFlags();
+    }
+  }
 
-  const { isLoading, data, error } = useGraphqlQuery(
-    `query ChannelPicker {
-        grievanceConfig{
-          grievanceFlags
-        }
-    }`,
-    { searchString, first: 20 },
-    { skip: true },
-  );
+  render() {
+    const {
+      intl,
+      onChange,
+      readOnly,
+      required,
+      withLabel = true,
+      withPlaceholder,
+      value,
+      label,
+      filterOptions,
+      filterSelectedOptions,
+      placeholder,
+      multiple,
+      flags,
+      fetching,
+      error,
+    } = this.props;
 
-  return (
-    <Autocomplete
-      multiple={multiple}
-      required={required}
-      placeholder={placeholder ?? formatMessage('FlagPicker.placeholder')}
-      label={label ?? formatMessage('FlagPicker.label')}
-      error={error}
-      withLabel={withLabel}
-      withPlaceholder={withPlaceholder}
-      readOnly={readOnly}
-      options={data?.grievanceConfig?.grievanceFlags.map((flag) => flag) ?? []}
-      isLoading={isLoading}
-      value={value}
-      getOptionLabel={(option) => `${option}`}
-      onChange={(option) => onChange(option, option ? `${option}` : null)}
-      filterOptions={filterOptions}
-      filterSelectedOptions={filterSelectedOptions}
-      onInputChange={setSearchString}
-    />
-  );
+    return (
+      <Autocomplete
+        multiple={multiple}
+        required={required}
+        placeholder={placeholder ?? formatMessage(intl, 'ticket', 'FlagPicker.placeholder')}
+        label={label ?? formatMessage(intl, 'ticket', 'FlagPicker.label')}
+        error={error}
+        withLabel={withLabel}
+        withPlaceholder={withPlaceholder}
+        readOnly={readOnly}
+        options={flags}
+        isLoading={fetching}
+        value={value}
+        getOptionLabel={(option) => option?.nome ?? `${option}`}
+        onChange={(option) => onChange(option, option?.nome ?? null)}
+        filterOptions={filterOptions}
+        filterSelectedOptions={filterSelectedOptions}
+        onInputChange={this.props.onInputChange || (() => { })}
+      />
+    );
+  }
 }
 
-export default FlagPicker;
+const mapStateToProps = (state) => ({
+  flags: state.grievanceSocialProtection.ticketFlags ?? [],
+  fetching: state.grievanceSocialProtection.fetchingTicketFlags,
+  error: state.grievanceSocialProtection.errorTicketFlags,
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchTicketFlags }, dispatch);
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FlagPicker));

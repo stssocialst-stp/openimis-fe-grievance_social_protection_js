@@ -48,6 +48,36 @@ function reducer(
     errorGrievanceConfig: null,
     grievanceConfig: null,
 
+    fetchingTicketCategories: false,
+    fetchedTicketCategories: false,
+    errorTicketCategories: null,
+    ticketCategories: [],
+
+    fetchingTicketChannels: false,
+    fetchedTicketChannels: false,
+    errorTicketChannels: null,
+    ticketChannels: [],
+
+    fetchingTicketFlags: false,
+    fetchedTicketFlags: false,
+    errorTicketFlags: null,
+    ticketFlags: [],
+
+    fetchingTicketPriorities: false,
+    fetchedTicketPriorities: false,
+    errorTicketPriorities: null,
+    ticketPriorities: [],
+
+    fetchingTicketAttachmentTypes: false,
+    fetchedTicketAttachmentTypes: false,
+    errorTicketAttachmentTypes: null,
+    ticketAttachmentTypes: [],
+
+    fetchingAutofillIndividual: false,
+    fetchedAutofillIndividual: false,
+    errorAutofillIndividual: null,
+    autofillIndividual: null,
+
     submittingMutation: false,
     mutation: {},
 
@@ -254,6 +284,81 @@ function reducer(
       return dispatchMutationResp(state, 'updateTicket', action);
     case 'TICKET_DELETE_TICKET_RESP':
       return dispatchMutationResp(state, 'deleteTicket', action);
+    case 'TICKET_PICKER_CATEGORIES_REQ':
+      return { ...state, fetchingTicketCategories: true, fetchedTicketCategories: false, errorTicketCategories: null };
+    case 'TICKET_PICKER_CATEGORIES_RESP':
+      return {
+        ...state,
+        fetchingTicketCategories: false,
+        fetchedTicketCategories: true,
+        ticketCategories: (action.payload.data.ticketCategories?.edges ?? []).map((e) => e.node),
+        errorTicketCategories: null,
+      };
+    case 'TICKET_PICKER_CATEGORIES_ERR':
+      return { ...state, fetchingTicketCategories: false, errorTicketCategories: formatServerError(action.payload) };
+
+    case 'TICKET_PICKER_CHANNELS_REQ':
+      return { ...state, fetchingTicketChannels: true, fetchedTicketChannels: false, errorTicketChannels: null };
+    case 'TICKET_PICKER_CHANNELS_RESP':
+      return {
+        ...state,
+        fetchingTicketChannels: false,
+        fetchedTicketChannels: true,
+        ticketChannels: (action.payload.data.ticketChannels?.edges ?? []).map((e) => e.node),
+        errorTicketChannels: null,
+      };
+    case 'TICKET_PICKER_CHANNELS_ERR':
+      return { ...state, fetchingTicketChannels: false, errorTicketChannels: formatServerError(action.payload) };
+
+    case 'TICKET_PICKER_FLAGS_REQ':
+      return { ...state, fetchingTicketFlags: true, fetchedTicketFlags: false, errorTicketFlags: null };
+    case 'TICKET_PICKER_FLAGS_RESP':
+      return {
+        ...state,
+        fetchingTicketFlags: false,
+        fetchedTicketFlags: true,
+        ticketFlags: (action.payload.data.ticketFlags?.edges ?? []).map((e) => e.node),
+        errorTicketFlags: null,
+      };
+    case 'TICKET_PICKER_FLAGS_ERR':
+      return { ...state, fetchingTicketFlags: false, errorTicketFlags: formatServerError(action.payload) };
+
+    case 'TICKET_PICKER_PRIORITIES_REQ':
+      return { ...state, fetchingTicketPriorities: true, fetchedTicketPriorities: false, errorTicketPriorities: null };
+    case 'TICKET_PICKER_PRIORITIES_RESP':
+      return {
+        ...state,
+        fetchingTicketPriorities: false,
+        fetchedTicketPriorities: true,
+        ticketPriorities: (action.payload.data.ticketPriorities?.edges ?? []).map((e) => e.node),
+        errorTicketPriorities: null,
+      };
+    case 'TICKET_PICKER_PRIORITIES_ERR':
+      return { ...state, fetchingTicketPriorities: false, errorTicketPriorities: formatServerError(action.payload) };
+
+    case 'TICKET_PICKER_ATTACHMENT_TYPES_REQ':
+      return { ...state, fetchingTicketAttachmentTypes: true, fetchedTicketAttachmentTypes: false, errorTicketAttachmentTypes: null };
+    case 'TICKET_PICKER_ATTACHMENT_TYPES_RESP':
+      return {
+        ...state,
+        fetchingTicketAttachmentTypes: false,
+        fetchedTicketAttachmentTypes: true,
+        ticketAttachmentTypes: (action.payload.data.ticketAttachmentType?.edges ?? []).map((e) => e.node),
+        errorTicketAttachmentTypes: null,
+      };
+    case 'TICKET_PICKER_ATTACHMENT_TYPES_ERR':
+      return { ...state, fetchingTicketAttachmentTypes: false, errorTicketAttachmentTypes: formatServerError(action.payload) };
+
+    case 'TICKET_INDIVIDUAL_AUTOFILL_REQ':
+      return { ...state, fetchingAutofillIndividual: true, fetchedAutofillIndividual: false, autofillIndividual: null, errorAutofillIndividual: null };
+    case 'TICKET_INDIVIDUAL_AUTOFILL_RESP': {
+      const edges = action.payload.data.individual?.edges ?? [];
+      const node = edges.length > 0 ? edges[0].node : null;
+      return { ...state, fetchingAutofillIndividual: false, fetchedAutofillIndividual: true, autofillIndividual: node, errorAutofillIndividual: null };
+    }
+    case 'TICKET_INDIVIDUAL_AUTOFILL_ERR':
+      return { ...state, fetchingAutofillIndividual: false, errorAutofillIndividual: formatServerError(action.payload) };
+
     case 'TICKET_ATTACHMENT_MUTATION_REQ':
       return dispatchMutationReq(state, action);
     case 'TICKET_ATTACHMENT_MUTATION_ERR':

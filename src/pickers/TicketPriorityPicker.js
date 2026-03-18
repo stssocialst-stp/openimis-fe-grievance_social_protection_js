@@ -1,24 +1,64 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { Component } from 'react';
-import { ConstantBasedPicker } from '@stssocialst-stp/fe-core';
+import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Autocomplete, formatMessage } from '@stssocialst-stp/fe-core';
+import { fetchTicketPriorities } from '../actions';
 
-import { TICKET_PRIORITY } from '../constants';
-
-// eslint-disable-next-line react/prefer-stateless-function
 class TicketPriorityPicker extends Component {
+  componentDidMount() {
+    if (!this.props.priorities.length && !this.props.fetching) {
+      this.props.fetchTicketPriorities();
+    }
+  }
+
   render() {
-    const { readOnly = false } = this.props;
+    const {
+      intl,
+      onChange,
+      readOnly,
+      required,
+      withLabel = true,
+      withPlaceholder,
+      value,
+      label,
+      filterOptions,
+      filterSelectedOptions,
+      placeholder,
+      multiple,
+      priorities,
+      fetching,
+      error,
+    } = this.props;
 
     return (
-      <ConstantBasedPicker
-        module="grievance"
-        label="Ticket Priority"
-        constants={TICKET_PRIORITY}
+      <Autocomplete
+        multiple={multiple}
+        required={required}
+        placeholder={placeholder ?? formatMessage(intl, 'ticket', 'TicketPriorityPicker.placeholder')}
+        label={label ?? formatMessage(intl, 'ticket', 'TicketPriorityPicker.label')}
+        error={error}
+        withLabel={withLabel}
+        withPlaceholder={withPlaceholder}
         readOnly={readOnly}
-        {...this.props}
+        options={priorities}
+        isLoading={fetching}
+        value={value}
+        getOptionLabel={(option) => option?.nome ?? `${option}`}
+        onChange={(option) => onChange(option, option?.nome ?? null)}
+        filterOptions={filterOptions}
+        filterSelectedOptions={filterSelectedOptions}
+        onInputChange={this.props.onInputChange || (() => { })}
       />
     );
   }
 }
 
-export default TicketPriorityPicker;
+const mapStateToProps = (state) => ({
+  priorities: state.grievanceSocialProtection.ticketPriorities ?? [],
+  fetching: state.grievanceSocialProtection.fetchingTicketPriorities,
+  error: state.grievanceSocialProtection.errorTicketPriorities,
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchTicketPriorities }, dispatch);
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(TicketPriorityPicker));

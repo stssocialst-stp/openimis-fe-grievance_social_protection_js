@@ -151,7 +151,7 @@ class TicketSearcher extends Component {
               required
               value={
                 reporter !== undefined
-                && reporter !== null ? (isEmptyObject(reporter)
+                  && reporter !== null ? (isEmptyObject(reporter)
                     ? null : reporter) : null
               }
             />
@@ -184,7 +184,7 @@ class TicketSearcher extends Component {
               readOnly
               value={
                 reporter !== undefined
-                && reporter !== null ? (isEmptyObject(reporter)
+                  && reporter !== null ? (isEmptyObject(reporter)
                     ? null : reporter) : null
               }
               module="core"
@@ -197,7 +197,7 @@ class TicketSearcher extends Component {
         }
         return picker;
       },
-      (ticket) => ticket.priority,
+      (ticket) => ticket.priority?.nome ?? ticket.priority ?? null,
       (ticket) => (
         <PublishedComponent
           pubRef="grievanceSocialProtection.TicketStatusPicker"
@@ -206,7 +206,7 @@ class TicketSearcher extends Component {
           module={MODULE_NAME}
         />
       ),
-      (ticket) => ticket.category,
+      (ticket) => ticket.category?.nome ?? ticket.category ?? null,
       (ticket) => (this.isShowHistory() ? ticket?.version : null),
     ];
 
