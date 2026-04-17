@@ -1,6 +1,6 @@
 {
   "name": "@stssocialst-stp/fe-grievance_social_protection",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "AGPL-3.0-only",
   "description": "Fork of a openIMIS Frontend Grievance module",
   "repository": {
