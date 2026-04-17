@@ -230,7 +230,7 @@ class AddTicketPage extends Component {
                 ) : null}
                 {grievantType === GRIEVANT_TYPES.BENEFICIARY && (
                   <>
-                    <Grid item xs={4} className={classes.item}>
+                    <Grid item xs={3} className={classes.item}>
                       <TextInput
                         module={MODULE_NAME}
                         label="ticket.name"
@@ -244,7 +244,7 @@ class AddTicketPage extends Component {
                         readOnly
                       />
                     </Grid>
-                    <Grid item xs={4} className={classes.item}>
+                    <Grid item xs={3} className={classes.item}>
                       <TextInput
                         module={MODULE_NAME}
                         label="ticket.phone"
@@ -256,7 +256,19 @@ class AddTicketPage extends Component {
                         readOnly
                       />
                     </Grid>
-                    <Grid item xs={4} className={classes.item}>
+                    <Grid item xs={3} className={classes.item}>
+                      <TextInput
+                        module={MODULE_NAME}
+                        label="ticket.phone2"
+                        value={!!stateEdited && !!stateEdited.reporter
+                          ? this.extractFieldFromJsonExt(stateEdited, 'phone2')
+                          : EMPTY_STRING}
+                        onChange={(v) => this.updateAttribute('phone2', v)}
+                        required={false}
+                        readOnly
+                      />
+                    </Grid>
+                    <Grid item xs={3} className={classes.item}>
                       <TextInput
                         module={MODULE_NAME}
                         label="ticket.email"
