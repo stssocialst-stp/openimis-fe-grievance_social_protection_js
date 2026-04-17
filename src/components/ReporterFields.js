@@ -41,8 +41,8 @@ const ReporterFields = ({
             reporterInfo.name
               ? reporterInfo.name
               : reporter.firstName && reporter.lastName
-              ? `${reporter.firstName} ${reporter.lastName}`
-              : EMPTY_STRING
+                ? `${reporter.firstName} ${reporter.lastName}`
+                : EMPTY_STRING
           }
           onChange={(v) => updateReporterInfo('name', v)}
           required={false}
@@ -80,6 +80,16 @@ const ReporterFields = ({
           label="ticket.phone"
           value={reporterInfo.phone || EMPTY_STRING}
           onChange={(v) => updateReporterInfo('phone', v)}
+          required={false}
+          readOnly={isReadOnly}
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <TextInput
+          module={MODULE_NAME}
+          label="ticket.phone2"
+          value={reporterInfo.phone2 || EMPTY_STRING}
+          onChange={(v) => updateReporterInfo('phone2', v)}
           required={false}
           readOnly={isReadOnly}
         />

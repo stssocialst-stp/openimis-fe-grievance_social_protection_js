@@ -53,6 +53,7 @@ class AddTicketPage extends Component {
             dob: ind.dob || '',
             gender: ind.sexo || '',
             phone: ind.contactoTelefonico || '',
+            phone2: '',
             otherInfo: ind.vulgo || '',
             idNumber: ind.numDocId || '',
             district: ind.distrito || '',
