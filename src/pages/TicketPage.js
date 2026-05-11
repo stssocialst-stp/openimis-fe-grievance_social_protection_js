@@ -9,7 +9,7 @@ import {
 } from '@stssocialst-stp/fe-core';
 import TicketForm from '../components/TicketForm';
 import { updateTicket, createTicket } from '../actions';
-import { RIGHT_TICKET_ADD, RIGHT_TICKET_EDIT, TICKET_STATUSES } from '../constants';
+import { RIGHT_TICKET_ADD, RIGHT_TICKET_EDIT, RIGHT_TICKET_SEARCH, TICKET_STATUSES } from '../constants';
 
 const styles = (theme) => ({
   page: theme.page,
@@ -52,7 +52,11 @@ class TicketPage extends Component {
       classes, modulesManager, history, rights, ticketUuid, overview, ticket, ticketVersion,
     } = this.props;
     const readOnly = [TICKET_STATUSES.CLOSED, TICKET_STATUSES.REJECTED].includes(ticket?.status) || ticket?.isHistory;
-    if (!(rights.includes(RIGHT_TICKET_EDIT) || rights.includes(RIGHT_TICKET_ADD))) return null;
+    const canViewTicket = rights.includes(RIGHT_TICKET_SEARCH) || rights.includes(RIGHT_TICKET_EDIT);
+    const canAddTicket = rights.includes(RIGHT_TICKET_ADD);
+    const canEditTicket = rights.includes(RIGHT_TICKET_EDIT);
+    if (ticketUuid && !canViewTicket) return null;
+    if (!ticketUuid && !canAddTicket) return null;
     return (
       <div className={`${readOnly ? classes.lockedPage : null} ${classes.page}`}>
         <TicketForm
@@ -61,8 +65,8 @@ class TicketPage extends Component {
           ticketVersion={ticketVersion}
           readOnly={readOnly}
           back={() => historyPush(modulesManager, history, 'grievanceSocialProtection.route.tickets')}
-          add={rights.includes(RIGHT_TICKET_ADD) ? this.add : null}
-          save={rights.includes(RIGHT_TICKET_EDIT) ? this.save : null}
+          add={canAddTicket ? this.add : null}
+          save={canEditTicket ? this.save : null}
         />
       </div>
     );

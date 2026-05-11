@@ -21,7 +21,15 @@ import { ticketLabel } from '../utils/utils';
 import EditTicketPage from '../pages/EditTicketPage';
 import AddTicketPage from '../pages/AddTicketPage';
 import TicketCommentPanel from './TicketCommentsPanel';
-import { MODULE_NAME, RIGHT_TICKET_ADD, TICKET_STATUSES } from '../constants';
+import {
+  MODULE_NAME,
+  RIGHT_TICKET_ADD,
+  RIGHT_TICKET_ADD_COMMENT,
+  RIGHT_TICKET_EDIT,
+  RIGHT_TICKET_RESOLVE,
+  RIGHT_TICKET_VIEW_COMMENTS,
+  TICKET_STATUSES,
+} from '../constants';
 
 
 const TICKET_FORM_CONTRIBUTION_KEY = "grievanceSocialProtection.TicketForm";
@@ -63,8 +71,8 @@ class TicketForm extends Component {
       );
     }
     if (prevProps.fetchedTicket !== this.props.fetchedTicket
-            && !!this.props.fetchedTicket
-            && !!this.props.ticket) {
+      && !!this.props.fetchedTicket
+      && !!this.props.ticket) {
       this.setState((state, props) => ({
         ticket: { ...props.ticket },
         ticketUuid: props.ticket.id,
@@ -146,14 +154,20 @@ class TicketForm extends Component {
     } = this.state;
 
     const readOnly = lockNew || !!ticket.validityTo || this.props.readOnly;
-    const actions = [
-      {
+    const canReopenTicket = this.props.rights.includes(RIGHT_TICKET_EDIT);
+    const canSeeComments = this.props.rights.includes(RIGHT_TICKET_VIEW_COMMENTS)
+      || this.props.rights.includes(RIGHT_TICKET_ADD_COMMENT)
+      || this.props.rights.includes(RIGHT_TICKET_RESOLVE);
+    const actions = [];
+
+    if (canReopenTicket) {
+      actions.push({
         doIt: this.reopenTicket,
         icon: <LockOpenIcon />,
         onlyIfDirty: ![TICKET_STATUSES.CLOSED, TICKET_STATUSES.REJECTED].includes(ticket?.status),
         disabled: ticket.isHistory,
-      },
-    ];
+      });
+    }
 
     // if (!!this.ticketAttachments && (!readOnly || ticket.attachmentsCount > 0)) {
     //   actions.push({
@@ -192,7 +206,7 @@ class TicketForm extends Component {
               reload={(ticketUuid || readOnly) && this.reload}
               readOnly={readOnly}
               overview={overview}
-              Panels={ticketUuid ? [EditTicketPage, TicketCommentPanel] : [AddTicketPage]}
+              Panels={ticketUuid ? [EditTicketPage, ...(canSeeComments ? [TicketCommentPanel] : [])] : [AddTicketPage]}
               onEditedChanged={this.onEditedChanged}
               actions={actions}
             />

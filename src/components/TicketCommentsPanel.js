@@ -27,7 +27,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import { createTicketComment, fetchComments, resolveGrievanceByComment } from '../actions';
 import GrievanceCommentDialog from '../dialogs/GrievanceCommentDialog';
 import { isEmptyObject } from '../utils/utils';
-import { MODULE_NAME, TICKET_STATUSES } from '../constants';
+import { MODULE_NAME, RIGHT_TICKET_ADD_COMMENT, RIGHT_TICKET_RESOLVE, TICKET_STATUSES } from '../constants';
 import TicketPrintCommentTemplate from './TicketPrintCommentTemplate';
 
 const styles = (theme) => ({
@@ -77,7 +77,7 @@ class TicketCommentPanel extends Component {
   };
 
   componentDidMount() {
-    this.setState({ }, () => this.onChangeRowsPerPage(this.defaultPageSize));
+    this.setState({}, () => this.onChangeRowsPerPage(this.defaultPageSize));
     if (!this.isReadOnly()) {
       this.interval = setInterval(this.reload, 5000);
     }
@@ -92,9 +92,9 @@ class TicketCommentPanel extends Component {
     const currentTicketExists = !!this.props.ticket;
 
     const ticketChanged = (!prevTicketExists && currentTicketExists) // New ticket appeared
-        || (prevTicketExists
-            && currentTicketExists
-            && prevProps.ticket.uuid !== this.props.ticket.uuid); // Ticket UUID changed
+      || (prevTicketExists
+        && currentTicketExists
+        && prevProps.ticket.uuid !== this.props.ticket.uuid); // Ticket UUID changed
 
     return ticketChanged;
   };
@@ -183,13 +183,15 @@ class TicketCommentPanel extends Component {
     const {
       intl, classes,
       errorTicketComments, ticketComments,
+      rights,
     } = this.props;
+    const canAddComment = rights.includes(RIGHT_TICKET_ADD_COMMENT);
+    const canResolve = rights.includes(RIGHT_TICKET_RESOLVE);
 
     const headers = [
       'ticket.commenter',
       'ticket.comment',
       'ticket.dateCreated',
-      'ticket.markAsResolved',
     ];
 
     const shouldHighlight = (row) => row?.isResolution;
@@ -209,7 +211,7 @@ class TicketCommentPanel extends Component {
               required
               value={
                 commenter !== undefined
-                && commenter !== null ? (isEmptyObject(commenter)
+                  && commenter !== null ? (isEmptyObject(commenter)
                     ? null : commenter) : null
               }
             />
@@ -222,7 +224,7 @@ class TicketCommentPanel extends Component {
               readOnly
               value={
                 commenter !== undefined
-                && commenter !== null ? (isEmptyObject(commenter)
+                  && commenter !== null ? (isEmptyObject(commenter)
                     ? null : commenter) : null
               }
               module={MODULE_NAME}
@@ -256,7 +258,11 @@ class TicketCommentPanel extends Component {
       },
       (comment) => comment.comment,
       (comment) => formatDateTimeFromISO(this.props.modulesManager, intl, comment.dateCreated),
-      (comment) => (
+    ];
+
+    if (canResolve) {
+      headers.push('ticket.markAsResolved');
+      itemFormatters.push((comment) => (
         <Tooltip title={formatMessage(this.props.intl, MODULE_NAME, 'resolveButtonTooltip')}>
           <IconButton
             onClick={() => { this.resolveGrievanceByComment(comment); }}
@@ -266,9 +272,8 @@ class TicketCommentPanel extends Component {
             <DoneIcon />
           </IconButton>
         </Tooltip>
-      ),
-
-    ];
+      ));
+    }
 
     const { comment, commenterType } = this.state;
 
@@ -282,16 +287,18 @@ class TicketCommentPanel extends Component {
             <IconButton variant="contained" component="label" onClick={this.reload} disabled={this.isReadOnly()}>
               <ReplayIcon />
             </IconButton>
-            <GrievanceCommentDialog
-              handleComment={this.handleComment}
-              openCommentModal={this.state.openCommentModal}
-              handleOpenModal={this.handleOpenModal}
-              updateCommentAttribute={this.updateCommentAttribute}
-              comment={comment}
-              updateCommenterType={this.updateCommenterType}
-              commenterType={commenterType}
-              disabled={this.isReadOnly()}
-            />
+            {canAddComment && (
+              <GrievanceCommentDialog
+                handleComment={this.handleComment}
+                openCommentModal={this.state.openCommentModal}
+                handleOpenModal={this.handleOpenModal}
+                updateCommentAttribute={this.updateCommentAttribute}
+                comment={comment}
+                updateCommenterType={this.updateCommenterType}
+                commenterType={commenterType}
+                disabled={this.isReadOnly()}
+              />
+            )}
             <ReactToPrint content={() => this.componentRef}>
               <PrintContextConsumer>
                 {({ handlePrint }) => (
@@ -337,6 +344,7 @@ class TicketCommentPanel extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
   fetchingTicketComments: state.grievanceSocialProtection.fetchingTicketComments,
   errorTicketComments: state.grievanceSocialProtection.errorTicketComments,
   fetchedTicketComments: state.grievanceSocialProtection.fetchedTicketComments,
